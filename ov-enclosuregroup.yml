@@ -1,0 +1,140 @@
+###
+# Copyright (2016-2017) Hewlett Packard Enterprise Development LP
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# You may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+###
+---
+- hosts: localhost
+  vars:
+    config: "~/ansible-scripts/oneview_config.json"
+  tasks:
+     - name: Create Enclosure Group EG-1Frame
+       oneview_enclosure_group:
+         config: "{{ config }}"
+         state: present
+         data:
+             name: "EG-1Frame"
+             ipAddressingMode: "External"
+             enclosureCount: 1
+             powerMode: RedundantPowerFeed
+             interconnectBayMappings:
+                 - interconnectBay: 1
+                   enclosureIndex: 1
+                   logicalInterconnectGroupUri: "/rest/sas-logical-interconnect-groups/d048deeb-0d3c-4846-bdd7-50ab7e8bf15b" # lig name is: LIG-SAS
+                 - interconnectBay: 4
+                   enclosureIndex: 1
+                   logicalInterconnectGroupUri: "/rest/sas-logical-interconnect-groups/d048deeb-0d3c-4846-bdd7-50ab7e8bf15b" # lig name is: LIG-SAS
+       delegate_to: localhost
+ 
+     - name: Create Enclosure Group EG-3Frames-SAN
+       oneview_enclosure_group:
+         config: "{{ config }}"
+         state: present
+         data:
+             name: "EG-3Frames-SAN"
+             ipAddressingMode: "External"
+             enclosureCount: 3
+             powerMode: RedundantPowerFeed
+             interconnectBayMappings:
+                 - interconnectBay: 1
+                   enclosureIndex: 1
+                   logicalInterconnectGroupUri: "/rest/sas-logical-interconnect-groups/d048deeb-0d3c-4846-bdd7-50ab7e8bf15b" # lig name is: LIG-SAS
+                 - interconnectBay: 1
+                   enclosureIndex: 2
+                   logicalInterconnectGroupUri: "/rest/sas-logical-interconnect-groups/d048deeb-0d3c-4846-bdd7-50ab7e8bf15b" # lig name is: LIG-SAS
+                 - interconnectBay: 1
+                   enclosureIndex: 3
+                   logicalInterconnectGroupUri: "/rest/sas-logical-interconnect-groups/d048deeb-0d3c-4846-bdd7-50ab7e8bf15b" # lig name is: LIG-SAS
+                 - interconnectBay: 2
+                   enclosureIndex: 1
+                   logicalInterconnectGroupUri: "/rest/logical-interconnect-groups/6ee6374f-3bf4-446c-a11f-4489f306d6e1" # lig name is: LIG-FC
+                 - interconnectBay: 3
+                   enclosureIndex: 1
+                   logicalInterconnectGroupUri: "/rest/logical-interconnect-groups/4c7c801e-c8d6-485f-bc0e-92a88e1bdeef" # lig name is: LIG-ETH
+                 - interconnectBay: 3
+                   enclosureIndex: 2
+                   logicalInterconnectGroupUri: "/rest/logical-interconnect-groups/4c7c801e-c8d6-485f-bc0e-92a88e1bdeef" # lig name is: LIG-ETH
+                 - interconnectBay: 3
+                   enclosureIndex: 3
+                   logicalInterconnectGroupUri: "/rest/logical-interconnect-groups/4c7c801e-c8d6-485f-bc0e-92a88e1bdeef" # lig name is: LIG-ETH
+                 - interconnectBay: 4
+                   enclosureIndex: 1
+                   logicalInterconnectGroupUri: "/rest/sas-logical-interconnect-groups/d048deeb-0d3c-4846-bdd7-50ab7e8bf15b" # lig name is: LIG-SAS
+                 - interconnectBay: 4
+                   enclosureIndex: 2
+                   logicalInterconnectGroupUri: "/rest/sas-logical-interconnect-groups/d048deeb-0d3c-4846-bdd7-50ab7e8bf15b" # lig name is: LIG-SAS
+                 - interconnectBay: 4
+                   enclosureIndex: 3
+                   logicalInterconnectGroupUri: "/rest/sas-logical-interconnect-groups/d048deeb-0d3c-4846-bdd7-50ab7e8bf15b" # lig name is: LIG-SAS
+                 - interconnectBay: 5
+                   enclosureIndex: 1
+                   logicalInterconnectGroupUri: "/rest/logical-interconnect-groups/6ee6374f-3bf4-446c-a11f-4489f306d6e1" # lig name is: LIG-FC
+                 - interconnectBay: 6
+                   enclosureIndex: 1
+                   logicalInterconnectGroupUri: "/rest/logical-interconnect-groups/4c7c801e-c8d6-485f-bc0e-92a88e1bdeef" # lig name is: LIG-ETH
+                 - interconnectBay: 6
+                   enclosureIndex: 2
+                   logicalInterconnectGroupUri: "/rest/logical-interconnect-groups/4c7c801e-c8d6-485f-bc0e-92a88e1bdeef" # lig name is: LIG-ETH
+                 - interconnectBay: 6
+                   enclosureIndex: 3
+                   logicalInterconnectGroupUri: "/rest/logical-interconnect-groups/4c7c801e-c8d6-485f-bc0e-92a88e1bdeef" # lig name is: LIG-ETH
+       delegate_to: localhost
+ 
+     - name: Create Enclosure Group Enclosure Group Oneview Ansible
+       oneview_enclosure_group:
+         config: "{{ config }}"
+         state: present
+         data:
+             name: "Enclosure Group Oneview Ansible"
+             ipAddressingMode: "DHCP"
+             enclosureCount: 3
+             powerMode: RedundantPowerFeed
+             interconnectBayMappings:
+                 - interconnectBay: 1
+                   enclosureIndex: 1
+                   logicalInterconnectGroupUri: "/rest/sas-logical-interconnect-groups/93249e72-009a-4424-a42f-841ad07b2a95" # lig name is: SAS Logical Interconnect Group Oneview Ansible
+                 - interconnectBay: 1
+                   enclosureIndex: 2
+                   logicalInterconnectGroupUri: "/rest/sas-logical-interconnect-groups/93249e72-009a-4424-a42f-841ad07b2a95" # lig name is: SAS Logical Interconnect Group Oneview Ansible
+                 - interconnectBay: 1
+                   enclosureIndex: 3
+                   logicalInterconnectGroupUri: "/rest/sas-logical-interconnect-groups/93249e72-009a-4424-a42f-841ad07b2a95" # lig name is: SAS Logical Interconnect Group Oneview Ansible
+                 - interconnectBay: 4
+                   enclosureIndex: 1
+                   logicalInterconnectGroupUri: "/rest/sas-logical-interconnect-groups/93249e72-009a-4424-a42f-841ad07b2a95" # lig name is: SAS Logical Interconnect Group Oneview Ansible
+                 - interconnectBay: 4
+                   enclosureIndex: 2
+                   logicalInterconnectGroupUri: "/rest/sas-logical-interconnect-groups/93249e72-009a-4424-a42f-841ad07b2a95" # lig name is: SAS Logical Interconnect Group Oneview Ansible
+                 - interconnectBay: 4
+                   enclosureIndex: 3
+                   logicalInterconnectGroupUri: "/rest/sas-logical-interconnect-groups/93249e72-009a-4424-a42f-841ad07b2a95" # lig name is: SAS Logical Interconnect Group Oneview Ansible
+       delegate_to: localhost
+ 
+     - name: Create Enclosure Group FC-EG
+       oneview_enclosure_group:
+         config: "{{ config }}"
+         state: present
+         data:
+             name: "FC-EG"
+             ipAddressingMode: "DHCP"
+             enclosureCount: 2
+             powerMode: RedundantPowerFeed
+             interconnectBayMappings:
+                 - interconnectBay: 2
+                   enclosureIndex: 2
+                   logicalInterconnectGroupUri: "/rest/logical-interconnect-groups/6ee6374f-3bf4-446c-a11f-4489f306d6e1" # lig name is: LIG-FC
+                 - interconnectBay: 5
+                   enclosureIndex: 2
+                   logicalInterconnectGroupUri: "/rest/logical-interconnect-groups/6ee6374f-3bf4-446c-a11f-4489f306d6e1" # lig name is: LIG-FC
+       delegate_to: localhost
+ 

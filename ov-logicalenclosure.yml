@@ -1,0 +1,33 @@
+###
+# Copyright (2016-2017) Hewlett Packard Enterprise Development LP
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# You may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+###
+---
+- hosts: localhost
+  vars:
+    config: "~/ansible-scripts/oneview_config.json"
+  tasks:
+     - name: Create logical enclosure Rack3164
+       oneview_logical_enclosure:
+         config: "{{ config }}"
+         state: present
+         data:
+             name: "Rack3164"
+             enclosureGroupUri: "/rest/enclosure-groups/e487521f-3b41-41ec-8c9e-a1e19545293c" # Enclosure Group name is EG-3Frames-SAN
+             enclosureUris:
+                 - "/rest/enclosures/0000000000A66101" # Enclosure name is 0000A66101
+                 - "/rest/enclosures/0000000000A66102" # Enclosure name is 0000A66102
+                 - "/rest/enclosures/0000000000A66103" # Enclosure name is 0000A66103
+       delegate_to: localhost
+ 

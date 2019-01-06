@@ -18,47 +18,6 @@
   vars:
     config: "~/ansible-scripts/oneview_config.json"
   tasks:
-     - name: Create logical Interconnect Group 1-Frame
-       oneview_logical_interconnect_group:
-         config: "{{ config }}"
-         state: present
-         data:
-             name: "1-Frame"
-             enclosureType: "SY12000"
-             redundancyType: "Redundant"
-             interconnectBaySet: 1
-             enclosureIndexes:
-                 - 1
-             interconnectMapTemplate:
-                 interconnectMapEntryTemplates:
-                     - permittedInterconnectTypeName: "Virtual Connect SE 40Gb F8 Module for Synergy"
-                       enclosureIndex: "1"
-                       logicalLocation: 
-                         locationEntries: 
-                             - relativeValue: 1
-                               type: "Enclosure" 
-                             - relativeValue: 1
-                               type: "Bay" 
-                     - permittedInterconnectTypeName: "Virtual Connect SE 40Gb F8 Module for Synergy"
-                       enclosureIndex: "1"
-                       logicalLocation: 
-                         locationEntries: 
-                             - relativeValue: 1
-                               type: "Enclosure" 
-                             - relativeValue: 4
-                               type: "Bay" 
-             #enableIgmpSnooping: false
-             #igmpIdleTimeoutInterval: 260
-             #enableNetworkLoopProtection: true
-             #enablePauseFloodProtection: true
-             #enableRichTLV: false
-             #enableTaggedLldp: false
-             #enableStormControl: false
-             #stormControlThreshold: 0
-             #fastMacCacheFailover: true
-             #macRefreshInterval: 5
-       delegate_to: localhost
- 
      - name: Create logical Interconnect Group LIG-ETH
        oneview_logical_interconnect_group:
          config: "{{ config }}"
@@ -453,34 +412,4 @@
                                type: "Enclosure" 
        delegate_to: localhost
  
-     - name: Create logical Interconnect Group SAS Logical Interconnect Group Oneview Ansible
-       oneview_sas_logical_interconnect_group:
-         config: "{{ config }}"
-         state: present
-         data:
-             name: "SAS Logical Interconnect Group Oneview Ansible"
-             enclosureType: "SY12000"
-             redundancyType: ""
-             interconnectBaySet: 1
-             enclosureIndexes:
-                 - 1
-             interconnectMapTemplate:
-                 interconnectMapEntryTemplates:
-                     - permittedInterconnectTypeUri: "/rest/sas-interconnect-types/Synergy12GbSASConnectionModule"
-                       enclosureIndex: "1"
-                       logicalLocation: 
-                         locationEntries: 
-                             - relativeValue: 1
-                               type: "Bay" 
-                             - relativeValue: 1
-                               type: "Enclosure" 
-                     - permittedInterconnectTypeUri: "/rest/sas-interconnect-types/Synergy12GbSASConnectionModule"
-                       enclosureIndex: "1"
-                       logicalLocation: 
-                         locationEntries: 
-                             - relativeValue: 4
-                               type: "Bay" 
-                             - relativeValue: 1
-                               type: "Enclosure" 
-       delegate_to: localhost
- 
+    

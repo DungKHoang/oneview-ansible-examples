@@ -1,0 +1,77 @@
+###
+# Copyright (2016-2017) Hewlett Packard Enterprise Development LP
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# You may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+###
+---
+- hosts: localhost
+  vars:
+    config: "~/ansible-scripts/oneview_config.json"
+  tasks:
+
+     - name: Create subnet 
+       oneview_id_pools_ipv4_subnet:
+         config: "{{ config }}"
+         state: present
+         data:
+             name: subnet name 10.254.13.0
+             type: Subnet
+             networkId: 10.254.13.0
+             subnetmask: 255.255.255.0
+             gateway: 10.254.13.1
+             domain: host.local
+             dnsServers:
+                 - 10.254.13.3
+                 - 10.254.13.2
+       delegate_to: localhost
+ 
+     - set_fact: subnet_uri="{{ id_pools_ipv4_subnet["uri"] }}" 
+     - name: Create IPV4 range Row38
+       oneview_id_pools_ipv4_range:
+         config: "{{ config }}"
+         state: present
+         data:
+             name: Row38
+             subnetUri: "{{ subnet_uri }}" 
+             type: Range
+             rangeCategory: Custom
+             startAddress: 10.254.13.100
+             endAddress: 10.254.13.149
+       delegate_to: localhost
+ 
+     - name: Create IPV4 range Row36
+       oneview_id_pools_ipv4_range:
+         config: "{{ config }}"
+         state: present
+         data:
+             name: Row36
+             subnetUri: "{{ subnet_uri }}" 
+             type: Range
+             rangeCategory: Custom
+             startAddress: 10.254.13.10
+             endAddress: 10.254.13.49
+       delegate_to: localhost
+ 
+     - name: Create IPV4 range Row37
+       oneview_id_pools_ipv4_range:
+         config: "{{ config }}"
+         state: present
+         data:
+             name: Row37
+             subnetUri: "{{ subnet_uri }}" 
+             type: Range
+             rangeCategory: Custom
+             startAddress: 10.254.13.50
+             endAddress: 10.254.13.99
+       delegate_to: localhost
+ 

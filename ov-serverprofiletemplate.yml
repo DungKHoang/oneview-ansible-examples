@@ -18,6 +18,20 @@
   vars:
     config: "~/ansible-scripts/oneview_config.json"
   tasks:
+
+#------------------ server profile template Template-Gen10
+     - name: Get uri for network Production100
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "Production100"
+     - set_fact:         var_Production100="{{ethernet_networks[0].uri}}"
+ 
+     - name: Get uri for network Production200
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "Production200"
+     - set_fact:         var_Production200="{{ethernet_networks[0].uri}}"
+ 
      - name: Create server profile template Template-Gen10
        oneview_server_profile_template:
          config: "{{ config }}"
@@ -52,12 +66,12 @@
              bios:
                  manageBios:     true
                  overriddenSettings:
-                     - id:    "WorkloadProfile" 
-                       value: "Virtualization-PowerEfficient" 
                      - id:    "NumaGroupSizeOpt" 
                        value: "Clustered" 
                      - id:    "PowerRegulator" 
                        value: "OsControl" 
+                     - id:    "WorkloadProfile" 
+                       value: "Virtualization-PowerEfficient" 
              localStorage:
                  sasLogicalJBODs:
                      - id: 1
@@ -115,7 +129,7 @@
                        portId: "Mezz 3:1-a"
                        name: "Prod-A"
                        functionType: "Ethernet"
-                       networkUri: "/rest/ethernet-networks/2618144e-5d57-409c-b583-746bee238cd9" # network or networkset name is: "Production100"
+                       networkUri: "{{var_Production100}}"   # network name Production100 
                        requestedMbps: 4000
                        requestedVFs: 0
                        boot: 
@@ -126,8 +140,10 @@
                        portId: "Mezz 3:2-a"
                        name: "Prod-B"
                        functionType: "Ethernet"
-                       networkUri: "/rest/ethernet-networks/9b4f341d-dba2-4bcd-a6dc-0bb6d06dde88" # network or networkset name is: "Production200"
+                       networkUri: "{{var_Production200}}"   # network name Production200 
                        requestedMbps: 4000
                        requestedVFs: 0
+                       boot: 
+                         priority: "NotBootable"
        delegate_to: localhost
  

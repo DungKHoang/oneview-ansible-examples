@@ -1,0 +1,114 @@
+###
+# Copyright (2016-2017) Hewlett Packard Enterprise Development LP
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# You may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+###
+---
+- hosts: localhost
+  vars:
+    config: "~/ansible-scripts/oneview_config.json"
+  tasks:
+
+     - name: Create a Storage System "ThreePAR-1" 
+       oneview_storage_system:
+         config: "{{ config }}"
+         state: present
+         data:
+             credentials:
+                 ip_hostname:               "172.18.11.11"
+                 username:                  "dcs"
+                 password:                  "????????"
+             managedDomain:                  "ScaleTestingDomain"
+             managedPools:                  "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_1"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_2"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_3"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_4"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_5"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_6"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_7"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_8"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_9"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_10"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_11"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_12"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_13"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_14"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_15"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_16"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_17"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_18"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_19"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_20"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_21"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_22"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_23"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_24"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_25"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_26"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_27"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_28"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_29"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_30"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_31"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_32"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_33"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_34"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_35"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_36"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_37"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_38"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_39"
+                   name:                    "ScaleTestingDomain"
+                 - domain:                  "ScaleTestingDomain_CPG_40"
+                   name:                    "ScaleTestingDomain"
+       delegate_to: localhost
+ 

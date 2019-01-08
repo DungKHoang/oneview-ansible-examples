@@ -18,16 +18,42 @@
   vars:
     config: "~/ansible-scripts/oneview_config.json"
   tasks:
+
+#---------------------------- Logical Enclosure Rack3164
+     - name: Get uri for EnclosureGroup EG-3Frames-SAN
+       oneview_enclosure_group_facts:
+         config:         "{{ config }}"
+         name:           "EG-3Frames-SAN"
+     - set_fact:         var_EG_3Frames_SAN="{{enclosure_groups[0].uri}}"
+ 
+     - name: Get uri for Enclosure 0000A66101
+       oneview_enclosure_facts:
+         config:         "{{ config }}"
+         name:           "0000A66101"
+     - set_fact:         var_0000A66101="{{enclosures[0].uri}}"
+ 
+     - name: Get uri for Enclosure 0000A66102
+       oneview_enclosure_facts:
+         config:         "{{ config }}"
+         name:           "0000A66102"
+     - set_fact:         var_0000A66102="{{enclosures[0].uri}}"
+ 
+     - name: Get uri for Enclosure 0000A66103
+       oneview_enclosure_facts:
+         config:         "{{ config }}"
+         name:           "0000A66103"
+     - set_fact:         var_0000A66103="{{enclosures[0].uri}}"
+ 
      - name: Create logical enclosure Rack3164
        oneview_logical_enclosure:
          config: "{{ config }}"
          state: present
          data:
-             name: "Rack3164"
-             enclosureGroupUri: "/rest/enclosure-groups/e487521f-3b41-41ec-8c9e-a1e19545293c" # Enclosure Group name is EG-3Frames-SAN
+             name:                   "Rack3164"
+             enclosureGroupUri:     "{{var_EG_3Frames_SAN}}"    # Enclosure Group name EG-3Frames-SAN 
              enclosureUris:
-                 - "/rest/enclosures/0000000000A66101" # Enclosure name is 0000A66101
-                 - "/rest/enclosures/0000000000A66102" # Enclosure name is 0000A66102
-                 - "/rest/enclosures/0000000000A66103" # Enclosure name is 0000A66103
+                 - "{{var_0000A66101}}"  # Enclosure name 0000A66101
+                 - "{{var_0000A66102}}"  # Enclosure name 0000A66102
+                 - "{{var_0000A66103}}"  # Enclosure name 0000A66103
        delegate_to: localhost
  

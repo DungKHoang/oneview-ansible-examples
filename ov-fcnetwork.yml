@@ -18,15 +18,16 @@
   vars:
     config: "~/ansible-scripts/oneview_config.json"
   tasks:
+
      - name: Create fc Network FC-A
        oneview_fc_network:
          config: "{{ config }}"
          state: present
          data:
-             name: "FC-A"
-             fabricType: FabricAttach
+             name:                    "FC-A"
+             fabricType:              FabricAttach
              autoLoginRedistribution: true
-             linkStabilityTime : 30
+             linkStabilityTime :     30
        delegate_to: localhost
  
      - name: Create fc Network FC-B
@@ -34,10 +35,10 @@
          config: "{{ config }}"
          state: present
          data:
-             name: "FC-B"
-             fabricType: FabricAttach
+             name:                    "FC-B"
+             fabricType:              FabricAttach
              autoLoginRedistribution: true
-             linkStabilityTime : 30
+             linkStabilityTime :     30
        delegate_to: localhost
  
      - name: Create fcoe Network VSAN10
@@ -45,8 +46,8 @@
          config: "{{ config }}"
          state: present
          data:
-             name: "VSAN10"
-             vlanId: 10
+             name:                   "VSAN10"
+             vlanId:                 10
        delegate_to: localhost
  
      - name: Create fcoe Network VSAN11
@@ -54,7 +55,7 @@
          config: "{{ config }}"
          state: present
          data:
-             name: "VSAN11"
-             vlanId: 11
+             name:                   "VSAN11"
+             vlanId:                 11
        delegate_to: localhost
  

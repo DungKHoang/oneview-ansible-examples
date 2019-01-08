@@ -18,69 +18,73 @@
   vars:
     config: "~/ansible-scripts/oneview_config.json"
   tasks:
-     - name: Create logical Interconnect Group LIG-ETH
+
+#---------------------------- Logical Interconnect Group 1-frame
+     - name: Get uri for network vLAN2260-A
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "vLAN2260-A"
+     - set_fact:         var_vLAN2260_A="{{ethernet_networks[0].uri}}"
+ 
+     - name: Get uri for network vLAN2261-B
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "vLAN2261-B"
+     - set_fact:         var_vLAN2261_B="{{ethernet_networks[0].uri}}"
+ 
+     - name: Get uri for network FC-A
+       oneview_fc_network_facts:
+         config:         "{{ config }}"
+         name:           "FC-A"
+     - set_fact:         var_FC_A="{{fc_networks[0].uri}}"
+ 
+     - name: Get uri for network FC-B
+       oneview_fc_network_facts:
+         config:         "{{ config }}"
+         name:           "FC-B"
+     - set_fact:         var_FC_B="{{fc_networks[0].uri}}"
+ 
+     - name: Get uri for network Production200
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "Production200"
+     - set_fact:         var_Production200="{{ethernet_networks[0].uri}}"
+ 
+     - name: Get uri for network Production100
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "Production100"
+     - set_fact:         var_Production100="{{ethernet_networks[0].uri}}"
+ 
+     - name: Create logical Interconnect Group 1-frame
        oneview_logical_interconnect_group:
          config: "{{ config }}"
          state: present
          data:
-             name: "LIG-ETH"
-             enclosureType: "SY12000"
-             redundancyType: "HighlyAvailable"
-             interconnectBaySet: 3
+             name:                   "1-frame"
+             enclosureType:          "SY12000"
+             redundancyType:         "Redundant"
+             interconnectBaySet:     3
              enclosureIndexes:
                  - 1
-                 - 2
-                 - 3
              interconnectMapTemplate:
                  interconnectMapEntryTemplates:
-                     - permittedInterconnectTypeName: "Synergy 20Gb Interconnect Link Module"
-                       enclosureIndex: "1"
-                       logicalLocation: 
-                         locationEntries: 
-                             - relativeValue: 1
-                               type: "Enclosure" 
-                             - relativeValue: 6
-                               type: "Bay" 
-                     - permittedInterconnectTypeName: "Synergy 20Gb Interconnect Link Module"
-                       enclosureIndex: "2"
-                       logicalLocation: 
-                         locationEntries: 
-                             - relativeValue: 2
-                               type: "Enclosure" 
-                             - relativeValue: 3
-                               type: "Bay" 
-                     - permittedInterconnectTypeName: "Synergy 20Gb Interconnect Link Module"
-                       enclosureIndex: "3"
-                       logicalLocation: 
-                         locationEntries: 
-                             - relativeValue: 3
-                               type: "Enclosure" 
-                             - relativeValue: 3
-                               type: "Bay" 
                      - permittedInterconnectTypeName: "Virtual Connect SE 40Gb F8 Module for Synergy"
-                       enclosureIndex: "1"
+                       enclosureIndex:               "1"
                        logicalLocation: 
                          locationEntries: 
-                             - relativeValue: 1
-                               type: "Enclosure" 
-                             - relativeValue: 3
-                               type: "Bay" 
+                             - relativeValue:    1
+                               type:             "Enclosure" 
+                             - relativeValue:    6
+                               type:             "Bay" 
                      - permittedInterconnectTypeName: "Virtual Connect SE 40Gb F8 Module for Synergy"
-                       enclosureIndex: "2"
+                       enclosureIndex:               "1"
                        logicalLocation: 
                          locationEntries: 
-                             - relativeValue: 2
-                               type: "Enclosure" 
-                             - relativeValue: 6
-                               type: "Bay" 
-                     - permittedInterconnectTypeName: "Synergy 20Gb Interconnect Link Module"
-                       enclosureIndex: "3"
-                       logicalLocation: 
-                         locationEntries: 
-                             - relativeValue: 3
-                               type: "Enclosure" 
-                             - relativeValue: 6
-                               type: "Bay" 
+                             - relativeValue:    1
+                               type:             "Enclosure" 
+                             - relativeValue:    3
+                               type:             "Bay" 
              #enableIgmpSnooping: false
              #igmpIdleTimeoutInterval: 260
              #enableNetworkLoopProtection: true
@@ -92,15 +96,150 @@
              #fastMacCacheFailover: true
              #macRefreshInterval: 5
              internalNetworkUris:
-                - "/rest/ethernet-networks/49a59734-a3cb-4301-a194-8977c6f475ff"    # network name is : vLAN2260-A 
-                - "/rest/ethernet-networks/2ce4d773-956e-4064-b595-c2c74a5e6bf0"    # network name is : vLAN2261-B 
+                - "{{var_vLAN2260_A}}"    # networkName: vLAN2260-A 
+                - "{{var_vLAN2261_B}}"    # networkName: vLAN2261-B 
              uplinkSets:
-                 - name: "Backup"
-                   networkType: "Ethernet"
-                   mode: "Auto"
+                 - name:             "FC_A"
+                   networkType:      "FibreChannel"
+                   mode:             "Auto"
                    networkUris:
-                     - "/rest/ethernet-networks/d48db1a6-f913-4202-be65-be2c9621f80c"    # network name is : Backup-30 
-                     - "/rest/ethernet-networks/3fd58418-0445-4e07-b86b-5f573993d2d4"    # network name is : SVCluster-1 
+                         - "{{var_FC_A}}"    # networkName: FC-A 
+                   logicalPortConfigInfos: []
+                 - name:             "FC_B"
+                   networkType:      "FibreChannel"
+                   mode:             "Auto"
+                   networkUris:
+                         - "{{var_FC_B}}"    # networkName: FC-B 
+                   logicalPortConfigInfos: []
+                 - name:             "Prod"
+                   networkType:      "Ethernet"
+                   mode:             "Auto"
+                   networkUris:
+                         - "{{var_Production200}}"    # networkName: Production200 
+                         - "{{var_Production100}}"    # networkName: Production100 
+                   logicalPortConfigInfos: []
+       delegate_to: localhost
+ 
+#---------------------------- Logical Interconnect Group LIG-ETH
+     - name: Get uri for network vLAN2260-A
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "vLAN2260-A"
+     - set_fact:         var_vLAN2260_A="{{ethernet_networks[0].uri}}"
+ 
+     - name: Get uri for network vLAN2261-B
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "vLAN2261-B"
+     - set_fact:         var_vLAN2261_B="{{ethernet_networks[0].uri}}"
+ 
+     - name: Get uri for network Backup-30
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "Backup-30"
+     - set_fact:         var_Backup_30="{{ethernet_networks[0].uri}}"
+ 
+     - name: Get uri for network SVCluster-1
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "SVCluster-1"
+     - set_fact:         var_SVCluster_1="{{ethernet_networks[0].uri}}"
+ 
+     - name: Get uri for network Production200
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "Production200"
+     - set_fact:         var_Production200="{{ethernet_networks[0].uri}}"
+ 
+     - name: Get uri for network Production100
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "Production100"
+     - set_fact:         var_Production100="{{ethernet_networks[0].uri}}"
+ 
+     - name: Create logical Interconnect Group LIG-ETH
+       oneview_logical_interconnect_group:
+         config: "{{ config }}"
+         state: present
+         data:
+             name:                   "LIG-ETH"
+             enclosureType:          "SY12000"
+             redundancyType:         "HighlyAvailable"
+             interconnectBaySet:     3
+             enclosureIndexes:
+                 - 1
+                 - 2
+                 - 3
+             interconnectMapTemplate:
+                 interconnectMapEntryTemplates:
+                     - permittedInterconnectTypeName: "Synergy 20Gb Interconnect Link Module"
+                       enclosureIndex:               "1"
+                       logicalLocation: 
+                         locationEntries: 
+                             - relativeValue:    1
+                               type:             "Enclosure" 
+                             - relativeValue:    6
+                               type:             "Bay" 
+                     - permittedInterconnectTypeName: "Synergy 20Gb Interconnect Link Module"
+                       enclosureIndex:               "2"
+                       logicalLocation: 
+                         locationEntries: 
+                             - relativeValue:    2
+                               type:             "Enclosure" 
+                             - relativeValue:    3
+                               type:             "Bay" 
+                     - permittedInterconnectTypeName: "Synergy 20Gb Interconnect Link Module"
+                       enclosureIndex:               "3"
+                       logicalLocation: 
+                         locationEntries: 
+                             - relativeValue:    3
+                               type:             "Enclosure" 
+                             - relativeValue:    3
+                               type:             "Bay" 
+                     - permittedInterconnectTypeName: "Virtual Connect SE 40Gb F8 Module for Synergy"
+                       enclosureIndex:               "1"
+                       logicalLocation: 
+                         locationEntries: 
+                             - relativeValue:    1
+                               type:             "Enclosure" 
+                             - relativeValue:    3
+                               type:             "Bay" 
+                     - permittedInterconnectTypeName: "Virtual Connect SE 40Gb F8 Module for Synergy"
+                       enclosureIndex:               "2"
+                       logicalLocation: 
+                         locationEntries: 
+                             - relativeValue:    2
+                               type:             "Enclosure" 
+                             - relativeValue:    6
+                               type:             "Bay" 
+                     - permittedInterconnectTypeName: "Synergy 20Gb Interconnect Link Module"
+                       enclosureIndex:               "3"
+                       logicalLocation: 
+                         locationEntries: 
+                             - relativeValue:    3
+                               type:             "Enclosure" 
+                             - relativeValue:    6
+                               type:             "Bay" 
+             #enableIgmpSnooping: false
+             #igmpIdleTimeoutInterval: 260
+             #enableNetworkLoopProtection: true
+             #enablePauseFloodProtection: true
+             #enableRichTLV: false
+             #enableTaggedLldp: false
+             #enableStormControl: false
+             #stormControlThreshold: 0
+             #fastMacCacheFailover: true
+             #macRefreshInterval: 5
+             internalNetworkUris:
+                - "{{var_vLAN2260_A}}"    # networkName: vLAN2260-A 
+                - "{{var_vLAN2261_B}}"    # networkName: vLAN2261-B 
+             uplinkSets:
+                 - name:             "Backup"
+                   networkType:      "Ethernet"
+                   mode:             "Auto"
+                   networkUris:
+                         - "{{var_Backup_30}}"    # networkName: Backup-30 
+                         - "{{var_SVCluster_1}}"    # networkName: SVCluster-1 
                    logicalPortConfigInfos:
                      - desiredSpeed: "Auto"
                        logicalLocation:
@@ -138,12 +277,12 @@
                                type: "Bay" 
                              - relativeValue: 61
                                type: "Port" 
-                 - name: "Prod"
-                   networkType: "Ethernet"
-                   mode: "Auto"
+                 - name:             "Prod"
+                   networkType:      "Ethernet"
+                   mode:             "Auto"
                    networkUris:
-                     - "/rest/ethernet-networks/9b4f341d-dba2-4bcd-a6dc-0bb6d06dde88"    # network name is : Production200 
-                     - "/rest/ethernet-networks/2618144e-5d57-409c-b583-746bee238cd9"    # network name is : Production100 
+                         - "{{var_Production200}}"    # networkName: Production200 
+                         - "{{var_Production100}}"    # networkName: Production100 
                    logicalPortConfigInfos:
                      - desiredSpeed: "Auto"
                        logicalLocation:
@@ -183,35 +322,48 @@
                                type: "Port" 
        delegate_to: localhost
  
+#---------------------------- Logical Interconnect Group LIG-FC
+     - name: Get uri for network FC-A
+       oneview_fc_network_facts:
+         config:         "{{ config }}"
+         name:           "FC-A"
+     - set_fact:         var_FC_A="{{fc_networks[0].uri}}"
+ 
+     - name: Get uri for network FC-B
+       oneview_fc_network_facts:
+         config:         "{{ config }}"
+         name:           "FC-B"
+     - set_fact:         var_FC_B="{{fc_networks[0].uri}}"
+ 
      - name: Create logical Interconnect Group LIG-FC
        oneview_logical_interconnect_group:
          config: "{{ config }}"
          state: present
          data:
-             name: "LIG-FC"
-             enclosureType: "SY12000"
-             redundancyType: "Redundant"
-             interconnectBaySet: 2
+             name:                   "LIG-FC"
+             enclosureType:          "SY12000"
+             redundancyType:         "Redundant"
+             interconnectBaySet:     2
              enclosureIndexes:
                  - -1
              interconnectMapTemplate:
                  interconnectMapEntryTemplates:
                      - permittedInterconnectTypeName: "Virtual Connect SE 16Gb FC Module for Synergy"
-                       enclosureIndex: "-1"
+                       enclosureIndex:               "-1"
                        logicalLocation: 
                          locationEntries: 
-                             - relativeValue: 5
-                               type: "Bay" 
-                             - relativeValue: -1
-                               type: "Enclosure" 
+                             - relativeValue:    5
+                               type:             "Bay" 
+                             - relativeValue:    -1
+                               type:             "Enclosure" 
                      - permittedInterconnectTypeName: "Virtual Connect SE 16Gb FC Module for Synergy"
-                       enclosureIndex: "-1"
+                       enclosureIndex:               "-1"
                        logicalLocation: 
                          locationEntries: 
-                             - relativeValue: 2
-                               type: "Bay" 
-                             - relativeValue: -1
-                               type: "Enclosure" 
+                             - relativeValue:    2
+                               type:             "Bay" 
+                             - relativeValue:    -1
+                               type:             "Enclosure" 
              #enableIgmpSnooping: false
              #igmpIdleTimeoutInterval: 260
              #enableNetworkLoopProtection: false
@@ -223,11 +375,11 @@
              #fastMacCacheFailover: true
              #macRefreshInterval: 5
              uplinkSets:
-                 - name: "FC-A"
-                   networkType: "FibreChannel"
-                   mode: "Auto"
+                 - name:             "FC-A"
+                   networkType:      "FibreChannel"
+                   mode:             "Auto"
                    networkUris:
-                     - "/rest/fc-networks/9ac25606-b7a7-41e1-bc8e-d30e41a292b1"    # network name is : FC-A 
+                         - "{{var_FC_A}}"    # networkName: FC-A 
                    logicalPortConfigInfos:
                      - desiredSpeed: "Auto"
                        logicalLocation:
@@ -301,11 +453,11 @@
                                type: "Bay" 
                              - relativeValue: -1
                                type: "Enclosure" 
-                 - name: "FC-B"
-                   networkType: "FibreChannel"
-                   mode: "Auto"
+                 - name:             "FC-B"
+                   networkType:      "FibreChannel"
+                   mode:             "Auto"
                    networkUris:
-                     - "/rest/fc-networks/e02dd5f0-2508-4d59-a24d-c44e3be29c27"    # network name is : FC-B 
+                         - "{{var_FC_B}}"    # networkName: FC-B 
                    logicalPortConfigInfos:
                      - desiredSpeed: "Auto"
                        logicalLocation:
@@ -381,35 +533,35 @@
                                type: "Enclosure" 
        delegate_to: localhost
  
+#---------------------------- Logical Interconnect Group LIG-SAS
      - name: Create logical Interconnect Group LIG-SAS
        oneview_sas_logical_interconnect_group:
          config: "{{ config }}"
          state: present
          data:
-             name: "LIG-SAS"
-             enclosureType: "SY12000"
-             redundancyType: ""
-             interconnectBaySet: 1
+             name:                   "LIG-SAS"
+             enclosureType:          "SY12000"
+             redundancyType:         ""
+             interconnectBaySet:     1
              enclosureIndexes:
                  - 1
              interconnectMapTemplate:
                  interconnectMapEntryTemplates:
                      - permittedInterconnectTypeUri: "/rest/sas-interconnect-types/Synergy12GbSASConnectionModule"
-                       enclosureIndex: "1"
+                       enclosureIndex:               "1"
                        logicalLocation: 
                          locationEntries: 
-                             - relativeValue: 1
-                               type: "Bay" 
-                             - relativeValue: 1
-                               type: "Enclosure" 
+                             - relativeValue:    4
+                               type:             "Bay" 
+                             - relativeValue:    1
+                               type:             "Enclosure" 
                      - permittedInterconnectTypeUri: "/rest/sas-interconnect-types/Synergy12GbSASConnectionModule"
-                       enclosureIndex: "1"
+                       enclosureIndex:               "1"
                        logicalLocation: 
                          locationEntries: 
-                             - relativeValue: 4
-                               type: "Bay" 
-                             - relativeValue: 1
-                               type: "Enclosure" 
+                             - relativeValue:    1
+                               type:             "Bay" 
+                             - relativeValue:    1
+                               type:             "Enclosure" 
        delegate_to: localhost
  
-    

@@ -19,31 +19,16 @@
     config: "~/ansible-scripts/oneview_config.json"
   tasks:
 
-     - name: Get uri for native network Production100
-       oneview_ethernet_network_facts:
-         config: "{{ config }}"
-         name: "Production100"
- 
-     - name: Create networkSet 
-       oneview_network_set:
+     - name: Configure time locale in en_US.UTF-8
+       oneview_appliance_time_and_locale_configuration:
          config: "{{ config }}"
          state: present
          data:
-             name: "ns-Production"
-             networkUris:
-                 - Production200
-                 - Production100
-             nativeNetworkUri: "{{ethernet_networks[0].uri}}"     # nativeNetworkName: "Production100" 
-       delegate_to: localhost
- 
-     - name: Create networkSet 
-       oneview_network_set:
-         config: "{{ config }}"
-         state: present
-         data:
-             name: "ns-VLAN"
-             networkUris:
-                 - vLAN2260-A
-                 - vLAN2261-B
+             locale:   en_US.UTF-8
+             timezone: UTC
+             ntpServers:
+                 - 0.us.pool.ntp.org
+                 - 1.us.pool.ntp.org
+                 - 2.us.pool.ntp.org
        delegate_to: localhost
  

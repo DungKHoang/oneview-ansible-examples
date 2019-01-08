@@ -18,17 +18,18 @@
   vars:
     config: "~/ansible-scripts/oneview_config.json"
   tasks:
+
      - name: Create an Ethernet Network Backup-30
        oneview_ethernet_network:
          config: "{{ config }}"
          state: present
          data:
-             name: "Backup-30"
-             ethernetNetworkType: Tagged
-             purpose: General
-             smartLink: true
-             privateNetwork: false
-             vlanId: 30
+             name:                   "Backup-30"
+             ethernetNetworkType:    Tagged
+             purpose:                General
+             smartLink:              true
+             privateNetwork:         false
+             vlanId:                 30
              bandwidth:
                 typicalBandwidth: 2500
                 maximumBandwidth: 20000
@@ -39,12 +40,12 @@
          config: "{{ config }}"
          state: present
          data:
-             name: "Production100"
-             ethernetNetworkType: Tagged
-             purpose: General
-             smartLink: false
-             privateNetwork: false
-             vlanId: 100
+             name:                   "Production100"
+             ethernetNetworkType:    Tagged
+             purpose:                General
+             smartLink:              false
+             privateNetwork:         false
+             vlanId:                 100
              bandwidth:
                 typicalBandwidth: 2500
                 maximumBandwidth: 20000
@@ -55,12 +56,12 @@
          config: "{{ config }}"
          state: present
          data:
-             name: "Production200"
-             ethernetNetworkType: Tagged
-             purpose: General
-             smartLink: false
-             privateNetwork: false
-             vlanId: 200
+             name:                   "Production200"
+             ethernetNetworkType:    Tagged
+             purpose:                General
+             smartLink:              false
+             privateNetwork:         false
+             vlanId:                 200
              bandwidth:
                 typicalBandwidth: 2500
                 maximumBandwidth: 20000
@@ -71,12 +72,12 @@
          config: "{{ config }}"
          state: present
          data:
-             name: "SVCluster-1"
-             ethernetNetworkType: Tagged
-             purpose: ISCSI
-             smartLink: true
-             privateNetwork: false
-             vlanId: 301
+             name:                   "SVCluster-1"
+             ethernetNetworkType:    Tagged
+             purpose:                ISCSI
+             smartLink:              true
+             privateNetwork:         false
+             vlanId:                 301
              bandwidth:
                 typicalBandwidth: 2500
                 maximumBandwidth: 20000
@@ -87,12 +88,12 @@
          config: "{{ config }}"
          state: present
          data:
-             name: "SVCluster-2"
-             ethernetNetworkType: Tagged
-             purpose: ISCSI
-             smartLink: true
-             privateNetwork: false
-             vlanId: 302
+             name:                   "SVCluster-2"
+             ethernetNetworkType:    Tagged
+             purpose:                ISCSI
+             smartLink:              true
+             privateNetwork:         false
+             vlanId:                 302
              bandwidth:
                 typicalBandwidth: 2500
                 maximumBandwidth: 20000
@@ -103,12 +104,12 @@
          config: "{{ config }}"
          state: present
          data:
-             name: "vLAN2260-A"
-             ethernetNetworkType: Tagged
-             purpose: General
-             smartLink: true
-             privateNetwork: false
-             vlanId: 2260
+             name:                   "vLAN2260-A"
+             ethernetNetworkType:    Tagged
+             purpose:                General
+             smartLink:              true
+             privateNetwork:         false
+             vlanId:                 2260
              bandwidth:
                 typicalBandwidth: 2500
                 maximumBandwidth: 20000
@@ -119,12 +120,12 @@
          config: "{{ config }}"
          state: present
          data:
-             name: "vLAN2261-B"
-             ethernetNetworkType: Tagged
-             purpose: General
-             smartLink: true
-             privateNetwork: false
-             vlanId: 2261
+             name:                   "vLAN2261-B"
+             ethernetNetworkType:    Tagged
+             purpose:                General
+             smartLink:              true
+             privateNetwork:         false
+             vlanId:                 2261
              bandwidth:
                 typicalBandwidth: 2500
                 maximumBandwidth: 20000

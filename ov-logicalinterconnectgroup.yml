@@ -20,17 +20,17 @@
   tasks:
 
 #---------------------------- Logical Interconnect Group 1-frame
-     - name: Get uri for network vLAN2260-A
+     - name: Get uri for network SVCluster-2
        oneview_ethernet_network_facts:
          config:         "{{ config }}"
-         name:           "vLAN2260-A"
-     - set_fact:         var_vLAN2260_A="{{ethernet_networks[0].uri}}"
+         name:           "SVCluster-2"
+     - set_fact:         var_SVCluster_2="{{ethernet_networks[0].uri}}"
  
-     - name: Get uri for network vLAN2261-B
+     - name: Get uri for network SVCluster-1
        oneview_ethernet_network_facts:
          config:         "{{ config }}"
-         name:           "vLAN2261-B"
-     - set_fact:         var_vLAN2261_B="{{ethernet_networks[0].uri}}"
+         name:           "SVCluster-1"
+     - set_fact:         var_SVCluster_1="{{ethernet_networks[0].uri}}"
  
      - name: Get uri for network FC-A
        oneview_fc_network_facts:
@@ -44,17 +44,17 @@
          name:           "FC-B"
      - set_fact:         var_FC_B="{{fc_networks[0].uri}}"
  
-     - name: Get uri for network Production200
-       oneview_ethernet_network_facts:
-         config:         "{{ config }}"
-         name:           "Production200"
-     - set_fact:         var_Production200="{{ethernet_networks[0].uri}}"
- 
      - name: Get uri for network Production100
        oneview_ethernet_network_facts:
          config:         "{{ config }}"
          name:           "Production100"
      - set_fact:         var_Production100="{{ethernet_networks[0].uri}}"
+ 
+     - name: Get uri for network Production200
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "Production200"
+     - set_fact:         var_Production200="{{ethernet_networks[0].uri}}"
  
      - name: Create logical Interconnect Group 1-frame
        oneview_logical_interconnect_group:
@@ -65,6 +65,18 @@
              enclosureType:          "SY12000"
              redundancyType:         "Redundant"
              interconnectBaySet:     3
+             ethernetSettings:           
+                 type:                           "EthernetInterconnectSettingsV4"
+                 enableIgmpSnooping:             false
+                 igmpIdleTimeoutInterval:        260
+                 enableNetworkLoopProtection:    true
+                 enablePauseFloodProtection:     true
+                 enableRichTLV:                  false
+                 enableTaggedLldp:               false
+                 enableStormControl:             false
+                 stormControlThreshold:          0
+                 enableFastMacCacheFailover:     true
+                 macRefreshInterval:             5
              enclosureIndexes:
                  - 1
              interconnectMapTemplate:
@@ -73,50 +85,143 @@
                        enclosureIndex:               "1"
                        logicalLocation: 
                          locationEntries: 
+                             - relativeValue:    3
+                               type:             "Bay" 
                              - relativeValue:    1
                                type:             "Enclosure" 
-                             - relativeValue:    6
-                               type:             "Bay" 
                      - permittedInterconnectTypeName: "Virtual Connect SE 40Gb F8 Module for Synergy"
                        enclosureIndex:               "1"
                        logicalLocation: 
                          locationEntries: 
+                             - relativeValue:    6
+                               type:             "Bay" 
                              - relativeValue:    1
                                type:             "Enclosure" 
-                             - relativeValue:    3
-                               type:             "Bay" 
-             #enableIgmpSnooping: false
-             #igmpIdleTimeoutInterval: 260
-             #enableNetworkLoopProtection: true
-             #enablePauseFloodProtection: true
-             #enableRichTLV: false
-             #enableTaggedLldp: false
-             #enableStormControl: false
-             #stormControlThreshold: 0
-             #fastMacCacheFailover: true
-             #macRefreshInterval: 5
              internalNetworkUris:
-                - "{{var_vLAN2260_A}}"    # networkName: vLAN2260-A 
-                - "{{var_vLAN2261_B}}"    # networkName: vLAN2261-B 
+                - "{{var_SVCluster_2}}"    # networkName: SVCluster-2 
+                - "{{var_SVCluster_1}}"    # networkName: SVCluster-1 
              uplinkSets:
-                 - name:             "FC_A"
+                 - name:             "FC"
                    networkType:      "FibreChannel"
                    mode:             "Auto"
                    networkUris:
                          - "{{var_FC_A}}"    # networkName: FC-A 
                    logicalPortConfigInfos: []
-                 - name:             "FC_B"
+                 - name:             "FC-B"
                    networkType:      "FibreChannel"
                    mode:             "Auto"
                    networkUris:
                          - "{{var_FC_B}}"    # networkName: FC-B 
                    logicalPortConfigInfos: []
-                 - name:             "Prod"
+                 - name:             "prod"
                    networkType:      "Ethernet"
                    mode:             "Auto"
                    networkUris:
-                         - "{{var_Production200}}"    # networkName: Production200 
                          - "{{var_Production100}}"    # networkName: Production100 
+                         - "{{var_Production200}}"    # networkName: Production200 
+                   logicalPortConfigInfos: []
+       delegate_to: localhost
+ 
+#---------------------------- Logical Interconnect Group 1-frame-ansible
+     - name: Get uri for network SVCluster-2
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "SVCluster-2"
+     - set_fact:         var_SVCluster_2="{{ethernet_networks[0].uri}}"
+ 
+     - name: Get uri for network SVCluster-1
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "SVCluster-1"
+     - set_fact:         var_SVCluster_1="{{ethernet_networks[0].uri}}"
+ 
+     - name: Get uri for network FC-A
+       oneview_fc_network_facts:
+         config:         "{{ config }}"
+         name:           "FC-A"
+     - set_fact:         var_FC_A="{{fc_networks[0].uri}}"
+ 
+     - name: Get uri for network FC-B
+       oneview_fc_network_facts:
+         config:         "{{ config }}"
+         name:           "FC-B"
+     - set_fact:         var_FC_B="{{fc_networks[0].uri}}"
+ 
+     - name: Get uri for network Production100
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "Production100"
+     - set_fact:         var_Production100="{{ethernet_networks[0].uri}}"
+ 
+     - name: Get uri for network Production200
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "Production200"
+     - set_fact:         var_Production200="{{ethernet_networks[0].uri}}"
+ 
+     - name: Create logical Interconnect Group 1-frame-ansible
+       oneview_logical_interconnect_group:
+         config: "{{ config }}"
+         state: present
+         data:
+             name:                   "1-frame-ansible"
+             enclosureType:          "SY12000"
+             redundancyType:         "Redundant"
+             interconnectBaySet:     3
+             ethernetSettings:           
+                 type:                           "EthernetInterconnectSettingsV4"
+                 enableIgmpSnooping:             false
+                 igmpIdleTimeoutInterval:        260
+                 enableNetworkLoopProtection:    true
+                 enablePauseFloodProtection:     true
+                 enableRichTLV:                  false
+                 enableTaggedLldp:               false
+                 enableStormControl:             false
+                 stormControlThreshold:          0
+                 enableFastMacCacheFailover:     true
+                 macRefreshInterval:             5
+             enclosureIndexes:
+                 - 1
+             interconnectMapTemplate:
+                 interconnectMapEntryTemplates:
+                     - permittedInterconnectTypeName: "Virtual Connect SE 40Gb F8 Module for Synergy"
+                       enclosureIndex:               "1"
+                       logicalLocation: 
+                         locationEntries: 
+                             - relativeValue:    6
+                               type:             "Bay" 
+                             - relativeValue:    1
+                               type:             "Enclosure" 
+                     - permittedInterconnectTypeName: "Virtual Connect SE 40Gb F8 Module for Synergy"
+                       enclosureIndex:               "1"
+                       logicalLocation: 
+                         locationEntries: 
+                             - relativeValue:    3
+                               type:             "Bay" 
+                             - relativeValue:    1
+                               type:             "Enclosure" 
+             internalNetworkUris:
+                - "{{var_SVCluster_2}}"    # networkName: SVCluster-2 
+                - "{{var_SVCluster_1}}"    # networkName: SVCluster-1 
+             uplinkSets:
+                 - name:             "FC"
+                   networkType:      "FibreChannel"
+                   mode:             "Auto"
+                   networkUris:
+                         - "{{var_FC_A}}"    # networkName: FC-A 
+                   logicalPortConfigInfos: []
+                 - name:             "FC-B"
+                   networkType:      "FibreChannel"
+                   mode:             "Auto"
+                   networkUris:
+                         - "{{var_FC_B}}"    # networkName: FC-B 
+                   logicalPortConfigInfos: []
+                 - name:             "prod"
+                   networkType:      "Ethernet"
+                   mode:             "Auto"
+                   networkUris:
+                         - "{{var_Production100}}"    # networkName: Production100 
+                         - "{{var_Production200}}"    # networkName: Production200 
                    logicalPortConfigInfos: []
        delegate_to: localhost
  
@@ -145,17 +250,17 @@
          name:           "SVCluster-1"
      - set_fact:         var_SVCluster_1="{{ethernet_networks[0].uri}}"
  
-     - name: Get uri for network Production200
-       oneview_ethernet_network_facts:
-         config:         "{{ config }}"
-         name:           "Production200"
-     - set_fact:         var_Production200="{{ethernet_networks[0].uri}}"
- 
      - name: Get uri for network Production100
        oneview_ethernet_network_facts:
          config:         "{{ config }}"
          name:           "Production100"
      - set_fact:         var_Production100="{{ethernet_networks[0].uri}}"
+ 
+     - name: Get uri for network Production200
+       oneview_ethernet_network_facts:
+         config:         "{{ config }}"
+         name:           "Production200"
+     - set_fact:         var_Production200="{{ethernet_networks[0].uri}}"
  
      - name: Create logical Interconnect Group LIG-ETH
        oneview_logical_interconnect_group:
@@ -166,6 +271,18 @@
              enclosureType:          "SY12000"
              redundancyType:         "HighlyAvailable"
              interconnectBaySet:     3
+             ethernetSettings:           
+                 type:                           "EthernetInterconnectSettingsV4"
+                 enableIgmpSnooping:             false
+                 igmpIdleTimeoutInterval:        260
+                 enableNetworkLoopProtection:    true
+                 enablePauseFloodProtection:     true
+                 enableRichTLV:                  false
+                 enableTaggedLldp:               false
+                 enableStormControl:             false
+                 stormControlThreshold:          0
+                 enableFastMacCacheFailover:     true
+                 macRefreshInterval:             5
              enclosureIndexes:
                  - 1
                  - 2
@@ -173,63 +290,53 @@
              interconnectMapTemplate:
                  interconnectMapEntryTemplates:
                      - permittedInterconnectTypeName: "Synergy 20Gb Interconnect Link Module"
-                       enclosureIndex:               "1"
-                       logicalLocation: 
-                         locationEntries: 
-                             - relativeValue:    1
-                               type:             "Enclosure" 
-                             - relativeValue:    6
-                               type:             "Bay" 
-                     - permittedInterconnectTypeName: "Synergy 20Gb Interconnect Link Module"
-                       enclosureIndex:               "2"
-                       logicalLocation: 
-                         locationEntries: 
-                             - relativeValue:    2
-                               type:             "Enclosure" 
-                             - relativeValue:    3
-                               type:             "Bay" 
-                     - permittedInterconnectTypeName: "Synergy 20Gb Interconnect Link Module"
                        enclosureIndex:               "3"
                        logicalLocation: 
                          locationEntries: 
                              - relativeValue:    3
-                               type:             "Enclosure" 
-                             - relativeValue:    3
                                type:             "Bay" 
-                     - permittedInterconnectTypeName: "Virtual Connect SE 40Gb F8 Module for Synergy"
+                             - relativeValue:    3
+                               type:             "Enclosure" 
+                     - permittedInterconnectTypeName: "Synergy 20Gb Interconnect Link Module"
                        enclosureIndex:               "1"
                        logicalLocation: 
                          locationEntries: 
-                             - relativeValue:    1
-                               type:             "Enclosure" 
-                             - relativeValue:    3
-                               type:             "Bay" 
-                     - permittedInterconnectTypeName: "Virtual Connect SE 40Gb F8 Module for Synergy"
-                       enclosureIndex:               "2"
-                       logicalLocation: 
-                         locationEntries: 
-                             - relativeValue:    2
-                               type:             "Enclosure" 
                              - relativeValue:    6
                                type:             "Bay" 
+                             - relativeValue:    1
+                               type:             "Enclosure" 
                      - permittedInterconnectTypeName: "Synergy 20Gb Interconnect Link Module"
                        enclosureIndex:               "3"
                        logicalLocation: 
                          locationEntries: 
-                             - relativeValue:    3
-                               type:             "Enclosure" 
                              - relativeValue:    6
                                type:             "Bay" 
-             #enableIgmpSnooping: false
-             #igmpIdleTimeoutInterval: 260
-             #enableNetworkLoopProtection: true
-             #enablePauseFloodProtection: true
-             #enableRichTLV: false
-             #enableTaggedLldp: false
-             #enableStormControl: false
-             #stormControlThreshold: 0
-             #fastMacCacheFailover: true
-             #macRefreshInterval: 5
+                             - relativeValue:    3
+                               type:             "Enclosure" 
+                     - permittedInterconnectTypeName: "Synergy 20Gb Interconnect Link Module"
+                       enclosureIndex:               "2"
+                       logicalLocation: 
+                         locationEntries: 
+                             - relativeValue:    3
+                               type:             "Bay" 
+                             - relativeValue:    2
+                               type:             "Enclosure" 
+                     - permittedInterconnectTypeName: "Virtual Connect SE 40Gb F8 Module for Synergy"
+                       enclosureIndex:               "1"
+                       logicalLocation: 
+                         locationEntries: 
+                             - relativeValue:    3
+                               type:             "Bay" 
+                             - relativeValue:    1
+                               type:             "Enclosure" 
+                     - permittedInterconnectTypeName: "Virtual Connect SE 40Gb F8 Module for Synergy"
+                       enclosureIndex:               "2"
+                       logicalLocation: 
+                         locationEntries: 
+                             - relativeValue:    6
+                               type:             "Bay" 
+                             - relativeValue:    2
+                               type:             "Enclosure" 
              internalNetworkUris:
                 - "{{var_vLAN2260_A}}"    # networkName: vLAN2260-A 
                 - "{{var_vLAN2261_B}}"    # networkName: vLAN2261-B 
@@ -244,80 +351,80 @@
                      - desiredSpeed: "Auto"
                        logicalLocation:
                          locationEntries:
-                             - relativeValue: 1
-                               type: "Enclosure" 
-                             - relativeValue: 66
-                               type: "Port" 
                              - relativeValue: 3
                                type: "Bay" 
+                             - relativeValue: 66
+                               type: "Port" 
+                             - relativeValue: 1
+                               type: "Enclosure" 
                      - desiredSpeed: "Auto"
                        logicalLocation:
                          locationEntries:
+                             - relativeValue: 6
+                               type: "Bay" 
                              - relativeValue: 2
                                type: "Enclosure" 
                              - relativeValue: 66
                                type: "Port" 
-                             - relativeValue: 6
-                               type: "Bay" 
                      - desiredSpeed: "Auto"
                        logicalLocation:
                          locationEntries:
-                             - relativeValue: 1
-                               type: "Enclosure" 
-                             - relativeValue: 3
-                               type: "Bay" 
                              - relativeValue: 71
                                type: "Port" 
+                             - relativeValue: 3
+                               type: "Bay" 
+                             - relativeValue: 1
+                               type: "Enclosure" 
                      - desiredSpeed: "Auto"
                        logicalLocation:
                          locationEntries:
-                             - relativeValue: 2
-                               type: "Enclosure" 
                              - relativeValue: 6
                                type: "Bay" 
+                             - relativeValue: 2
+                               type: "Enclosure" 
                              - relativeValue: 61
                                type: "Port" 
                  - name:             "Prod"
                    networkType:      "Ethernet"
                    mode:             "Auto"
                    networkUris:
-                         - "{{var_Production200}}"    # networkName: Production200 
                          - "{{var_Production100}}"    # networkName: Production100 
+                         - "{{var_Production200}}"    # networkName: Production200 
                    logicalPortConfigInfos:
                      - desiredSpeed: "Auto"
                        logicalLocation:
                          locationEntries:
-                             - relativeValue: 1
-                               type: "Enclosure" 
-                             - relativeValue: 82
-                               type: "Port" 
                              - relativeValue: 3
                                type: "Bay" 
+                             - relativeValue: 82
+                               type: "Port" 
+                             - relativeValue: 1
+                               type: "Enclosure" 
                      - desiredSpeed: "Auto"
                        logicalLocation:
                          locationEntries:
+                             - relativeValue: 3
+                               type: "Bay" 
                              - relativeValue: 83
                                type: "Port" 
                              - relativeValue: 1
                                type: "Enclosure" 
-                             - relativeValue: 3
-                               type: "Bay" 
                      - desiredSpeed: "Auto"
                        logicalLocation:
                          locationEntries:
-                             - relativeValue: 2
-                               type: "Enclosure" 
                              - relativeValue: 6
                                type: "Bay" 
+                             - relativeValue: 2
+                               type: "Enclosure" 
                              - relativeValue: 77
                                type: "Port" 
                      - desiredSpeed: "Auto"
                        logicalLocation:
                          locationEntries:
-                             - relativeValue: 2
-                               type: "Enclosure" 
                              - relativeValue: 6
                                type: "Bay" 
+                             - relativeValue: 2
+                               type: "Enclosure" 
                              - relativeValue: 78
                                type: "Port" 
        delegate_to: localhost
@@ -344,6 +451,18 @@
              enclosureType:          "SY12000"
              redundancyType:         "Redundant"
              interconnectBaySet:     2
+             ethernetSettings:           
+                 type:                           "EthernetInterconnectSettingsV4"
+                 enableIgmpSnooping:             false
+                 igmpIdleTimeoutInterval:        260
+                 enableNetworkLoopProtection:    true
+                 enablePauseFloodProtection:     true
+                 enableRichTLV:                  false
+                 enableTaggedLldp:               false
+                 enableStormControl:             false
+                 stormControlThreshold:          0
+                 enableFastMacCacheFailover:     true
+                 macRefreshInterval:             5
              enclosureIndexes:
                  - -1
              interconnectMapTemplate:
@@ -352,28 +471,18 @@
                        enclosureIndex:               "-1"
                        logicalLocation: 
                          locationEntries: 
-                             - relativeValue:    5
-                               type:             "Bay" 
                              - relativeValue:    -1
                                type:             "Enclosure" 
+                             - relativeValue:    2
+                               type:             "Bay" 
                      - permittedInterconnectTypeName: "Virtual Connect SE 16Gb FC Module for Synergy"
                        enclosureIndex:               "-1"
                        logicalLocation: 
                          locationEntries: 
-                             - relativeValue:    2
+                             - relativeValue:    5
                                type:             "Bay" 
                              - relativeValue:    -1
                                type:             "Enclosure" 
-             #enableIgmpSnooping: false
-             #igmpIdleTimeoutInterval: 260
-             #enableNetworkLoopProtection: false
-             #enablePauseFloodProtection: false
-             #enableRichTLV: false
-             #enableTaggedLldp: false
-             #enableStormControl: false
-             #stormControlThreshold: 0
-             #fastMacCacheFailover: true
-             #macRefreshInterval: 5
              uplinkSets:
                  - name:             "FC-A"
                    networkType:      "FibreChannel"
@@ -384,75 +493,75 @@
                      - desiredSpeed: "Auto"
                        logicalLocation:
                          locationEntries:
-                             - relativeValue: 18
-                               type: "Port" 
-                             - relativeValue: 2
-                               type: "Bay" 
                              - relativeValue: -1
                                type: "Enclosure" 
-                     - desiredSpeed: "Auto"
-                       logicalLocation:
-                         locationEntries:
                              - relativeValue: 17
                                type: "Port" 
                              - relativeValue: 2
                                type: "Bay" 
-                             - relativeValue: -1
-                               type: "Enclosure" 
                      - desiredSpeed: "Auto"
                        logicalLocation:
                          locationEntries:
-                             - relativeValue: 16
+                             - relativeValue: -1
+                               type: "Enclosure" 
+                             - relativeValue: 18
                                type: "Port" 
                              - relativeValue: 2
                                type: "Bay" 
+                     - desiredSpeed: "Speed16G"
+                       logicalLocation:
+                         locationEntries:
                              - relativeValue: -1
                                type: "Enclosure" 
+                             - relativeValue: 2
+                               type: "Bay" 
+                             - relativeValue: 13
+                               type: "Port" 
+                     - desiredSpeed: "Auto"
+                       logicalLocation:
+                         locationEntries:
+                             - relativeValue: -1
+                               type: "Enclosure" 
+                             - relativeValue: 2
+                               type: "Bay" 
+                             - relativeValue: 16
+                               type: "Port" 
+                     - desiredSpeed: "Auto"
+                       logicalLocation:
+                         locationEntries:
+                             - relativeValue: -1
+                               type: "Enclosure" 
+                             - relativeValue: 19
+                               type: "Port" 
+                             - relativeValue: 2
+                               type: "Bay" 
+                     - desiredSpeed: "Speed8G"
+                       logicalLocation:
+                         locationEntries:
+                             - relativeValue: -1
+                               type: "Enclosure" 
+                             - relativeValue: 2
+                               type: "Bay" 
+                             - relativeValue: 15
+                               type: "Port" 
+                     - desiredSpeed: "Speed16G"
+                       logicalLocation:
+                         locationEntries:
+                             - relativeValue: -1
+                               type: "Enclosure" 
+                             - relativeValue: 2
+                               type: "Bay" 
+                             - relativeValue: 14
+                               type: "Port" 
                      - desiredSpeed: "Auto"
                        logicalLocation:
                          locationEntries:
                              - relativeValue: 20
                                type: "Port" 
-                             - relativeValue: 2
-                               type: "Bay" 
                              - relativeValue: -1
                                type: "Enclosure" 
-                     - desiredSpeed: "Auto"
-                       logicalLocation:
-                         locationEntries:
-                             - relativeValue: 19
-                               type: "Port" 
                              - relativeValue: 2
                                type: "Bay" 
-                             - relativeValue: -1
-                               type: "Enclosure" 
-                     - desiredSpeed: "Speed8G"
-                       logicalLocation:
-                         locationEntries:
-                             - relativeValue: 15
-                               type: "Port" 
-                             - relativeValue: 2
-                               type: "Bay" 
-                             - relativeValue: -1
-                               type: "Enclosure" 
-                     - desiredSpeed: "Speed16G"
-                       logicalLocation:
-                         locationEntries:
-                             - relativeValue: 13
-                               type: "Port" 
-                             - relativeValue: 2
-                               type: "Bay" 
-                             - relativeValue: -1
-                               type: "Enclosure" 
-                     - desiredSpeed: "Speed16G"
-                       logicalLocation:
-                         locationEntries:
-                             - relativeValue: 14
-                               type: "Port" 
-                             - relativeValue: 2
-                               type: "Bay" 
-                             - relativeValue: -1
-                               type: "Enclosure" 
                  - name:             "FC-B"
                    networkType:      "FibreChannel"
                    mode:             "Auto"
@@ -462,6 +571,15 @@
                      - desiredSpeed: "Auto"
                        logicalLocation:
                          locationEntries:
+                             - relativeValue: 5
+                               type: "Bay" 
+                             - relativeValue: -1
+                               type: "Enclosure" 
+                             - relativeValue: 19
+                               type: "Port" 
+                     - desiredSpeed: "Auto"
+                       logicalLocation:
+                         locationEntries:
                              - relativeValue: 20
                                type: "Port" 
                              - relativeValue: 5
@@ -471,66 +589,57 @@
                      - desiredSpeed: "Auto"
                        logicalLocation:
                          locationEntries:
-                             - relativeValue: 19
-                               type: "Port" 
                              - relativeValue: 5
                                type: "Bay" 
                              - relativeValue: -1
                                type: "Enclosure" 
-                     - desiredSpeed: "Auto"
-                       logicalLocation:
-                         locationEntries:
-                             - relativeValue: 18
-                               type: "Port" 
-                             - relativeValue: 5
-                               type: "Bay" 
-                             - relativeValue: -1
-                               type: "Enclosure" 
-                     - desiredSpeed: "Auto"
-                       logicalLocation:
-                         locationEntries:
-                             - relativeValue: 5
-                               type: "Bay" 
-                             - relativeValue: 13
-                               type: "Port" 
-                             - relativeValue: -1
-                               type: "Enclosure" 
-                     - desiredSpeed: "Auto"
-                       logicalLocation:
-                         locationEntries:
-                             - relativeValue: 17
-                               type: "Port" 
-                             - relativeValue: 5
-                               type: "Bay" 
-                             - relativeValue: -1
-                               type: "Enclosure" 
-                     - desiredSpeed: "Auto"
-                       logicalLocation:
-                         locationEntries:
-                             - relativeValue: 16
-                               type: "Port" 
-                             - relativeValue: 5
-                               type: "Bay" 
-                             - relativeValue: -1
-                               type: "Enclosure" 
-                     - desiredSpeed: "Auto"
-                       logicalLocation:
-                         locationEntries:
-                             - relativeValue: 15
-                               type: "Port" 
-                             - relativeValue: 5
-                               type: "Bay" 
-                             - relativeValue: -1
-                               type: "Enclosure" 
-                     - desiredSpeed: "Auto"
-                       logicalLocation:
-                         locationEntries:
-                             - relativeValue: 5
-                               type: "Bay" 
                              - relativeValue: 14
                                type: "Port" 
+                     - desiredSpeed: "Auto"
+                       logicalLocation:
+                         locationEntries:
+                             - relativeValue: 5
+                               type: "Bay" 
                              - relativeValue: -1
                                type: "Enclosure" 
+                             - relativeValue: 13
+                               type: "Port" 
+                     - desiredSpeed: "Auto"
+                       logicalLocation:
+                         locationEntries:
+                             - relativeValue: 5
+                               type: "Bay" 
+                             - relativeValue: -1
+                               type: "Enclosure" 
+                             - relativeValue: 16
+                               type: "Port" 
+                     - desiredSpeed: "Auto"
+                       logicalLocation:
+                         locationEntries:
+                             - relativeValue: 5
+                               type: "Bay" 
+                             - relativeValue: -1
+                               type: "Enclosure" 
+                             - relativeValue: 18
+                               type: "Port" 
+                     - desiredSpeed: "Auto"
+                       logicalLocation:
+                         locationEntries:
+                             - relativeValue: 5
+                               type: "Bay" 
+                             - relativeValue: -1
+                               type: "Enclosure" 
+                             - relativeValue: 15
+                               type: "Port" 
+                     - desiredSpeed: "Auto"
+                       logicalLocation:
+                         locationEntries:
+                             - relativeValue: 5
+                               type: "Bay" 
+                             - relativeValue: -1
+                               type: "Enclosure" 
+                             - relativeValue: 17
+                               type: "Port" 
        delegate_to: localhost
  
 #---------------------------- Logical Interconnect Group LIG-SAS
